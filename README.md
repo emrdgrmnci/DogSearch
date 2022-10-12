@@ -1,10 +1,10 @@
-#  Sisal [![Swift](https://img.shields.io/badge/Swift-5-orange.svg)]() [![Platform](https://img.shields.io/badge/platform-iOS14+-lightgrey.svg)]()
+#  DogSearch [![Swift](https://img.shields.io/badge/Swift-5-orange.svg)]() [![Platform](https://img.shields.io/badge/platform-iOS14+-lightgrey.svg)]()
 
 
 Purpose of the project
 ======================
 
-Implement a photo gallery application populated with data got from: (https://www.reddit.com/r/{KEYWORD}/top.json) (where {KEYWORD} is a placeholder).
+Implement a photo gallery application populated with data got from: (https://dog.ceo/dog-api).
 
 The Photo gallery is a grid of thumbs. When the users click on a photo, they can navigate to the detail page, with some details I have in the JSON. 
 Search functionality to the top of the listing page. When the users type something, displays the new content as they typed. If no content is available with the user-provided keyword, handles the no data state and let them know.
