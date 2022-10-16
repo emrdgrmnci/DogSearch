@@ -1,15 +1,6 @@
 {
-"kind": "Listing",
-"data": {
-"children": [{
-"kind": "t3",
-"data": {
-"subreddit": "cat",
-"title": "So much happiness looking at him",
-"thumbnail": "https://a.thumbs.redditmedia.com/UOCZSLfoAhfjZMzrVSjzfc5eem-BI1nMt2fvS-_-Ml0.jpg",
-"author": "Freon24",
-"url": "https://i.redd.it/6xy7y3yygks91.jpg"
-}
-}]
-}
+    "message": [
+        "https://images.dog.ceo/breeds/bulldog-boston/20200710_175933.jpg"
+    ],
+    "status": "success"
 }
