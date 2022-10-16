@@ -38,9 +38,8 @@ final class AppRouter {
   }
 
   func start() {
-    let rootViewController = MainViewControllerBuilder.make()
+    let rootViewController = BreedListViewControllerBuilder.make()
     let navigationController = UINavigationController(rootViewController: rootViewController)
-
     window?.rootViewController = navigationController
     window?.makeKeyAndVisible()
   }
