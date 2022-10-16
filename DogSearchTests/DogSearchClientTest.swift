@@ -13,12 +13,8 @@ final class DogSearchClientTest: XCTestCase {
     let bundle = Bundle(for: DogSearchClientTest.self)
     let url = bundle.url(forResource: "photo", withExtension: "json")!
     let data = try Data(contentsOf: url)
-    let photo = try JSONDecoder().decode(Photo.self, from: data)
+    let photo = try JSONDecoder().decode(BreedImages.self, from: data)
 
-    XCTAssertEqual(photo.data.children[0].data.title, "So much happiness looking at him")
-    XCTAssertEqual(photo.data.children[0].data.thumbnail, "https://a.thumbs.redditmedia.com/UOCZSLfoAhfjZMzrVSjzfc5eem-BI1nMt2fvS-_-Ml0.jpg")
-    XCTAssertEqual(photo.data.children[0].data.subreddit, "cat")
-    XCTAssertEqual(photo.data.children[0].data.author, "Freon24")
-    XCTAssertEqual(photo.data.children[0].data.url, "https://i.redd.it/6xy7y3yygks91.jpg")
+    XCTAssertEqual(photo.message[0], "https://images.dog.ceo/breeds/bulldog-boston/20200710_175933.jpg")
   }
 }

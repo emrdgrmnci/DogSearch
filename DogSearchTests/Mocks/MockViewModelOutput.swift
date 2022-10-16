@@ -7,16 +7,16 @@
 
 import Foundation
 
-final class MockViewModelOutput: MainViewModelDelegate {
-  var outputs: [MainViewModelOutput] = []
+final class MockViewModelOutput: BreedListViewModelDelegate {
 
-  func notifyCollectionView() {}
+  var outputs: [BreedListViewModelOutput] = []
 
-  func handleViewModelOutput(_ output: MainViewModelOutput) {
+  func handleViewModelOutput(_ output: BreedListViewModelOutput) {
     outputs.append(output)
   }
 
-  func navigate(to navigationType: MainViewRoute) {
-    outputs.append(.setTitle("Photos"))
-  }
+  func navigate(to route: BreedListViewRoute) { }
+
+
+  func notifyTableView() { }
 }

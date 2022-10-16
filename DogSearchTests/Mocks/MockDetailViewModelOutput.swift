@@ -7,10 +7,18 @@
 
 import Foundation
 
-final class MockDetailViewModelOutput: MainDetailViewModelDelegate {
-  var outputs: [MainViewModelOutput] = []
+final class MockDetailViewModelOutput: BreedListDetailViewModelDelegate {
 
-  func showDetail(_ presentation: MainDetailPresentation) {
-    outputs.append(.setLoading(true))
+  var outputs: [BreedListDetailPresentation] = []
+
+  func showDetail(_ presentation: BreedListDetailPresentation) {
+    outputs.append(presentation)
   }
+
+
+  func handleViewModelOutput(_ output: BreedListDetailViewModelOutput) { }
+
+  func navigate(to route: BreedListDetailViewRoute) { }
+
+  func notifyTableView() { }
 }
