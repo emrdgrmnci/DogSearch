@@ -17,7 +17,7 @@ final class BreedListDetailViewController: UIViewController {
   private var breedImages: BreedImages = .init(message: [], status: "")
   
   var detailViewModel: BreedListDetailViewModelProtocol!
-
+  
   private var cancellable: AnyCancellable?
   
   lazy var activityIndicator: UIActivityIndicatorView = {
@@ -57,7 +57,7 @@ final class BreedListDetailViewController: UIViewController {
       navigationItem.hidesSearchBarWhenScrolling = true
     }
   }
-
+  
   //MARK: - Configure TableView
   private func configureTableView() {
     view.addSubview(tableView)
@@ -66,7 +66,7 @@ final class BreedListDetailViewController: UIViewController {
     tableView.allowsSelection = false
     tableView.rowHeight = 100
   }
-
+  
   //MARK: -  Set TableView Delegates
   private func setTableViewDelegates() {
     tableView.delegate = self
@@ -87,7 +87,7 @@ final class BreedListDetailViewController: UIViewController {
     
     navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favorites", style: .plain, target: self, action: #selector(goToFavorites))
   }
-
+  
   //MARK: - Go to Favorites
   @objc func goToFavorites() {
     let vc = FavoriteDogListViewController()
@@ -107,13 +107,11 @@ extension BreedListDetailViewController: UITableViewDataSource {
     }
     
     cell.index = indexPath
-
-    cell.cancellable = cell.tapButton.compactMap{$0} .sink { [weak self] selectedIndex in
-      DispatchQueue.main.async {
-        self?.detailViewModel.selectBreed(at: selectedIndex.row, imagePath: self?.breedImages.message ?? [""])
-      }
-    }
     cell.configure(with: self.breedImages, indexPath: indexPath)
+    
+    cell.cancellable = cell.tapButton.compactMap{$0} .sink { [weak self] selectedIndex in
+      self?.detailViewModel.selectBreed(at: selectedIndex.row, imagePath: self?.breedImages.message ?? [""])
+    }
     return cell
   }
 }
