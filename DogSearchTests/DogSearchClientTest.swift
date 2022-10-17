@@ -1,20 +1,22 @@
 //
 //  DogSearchClientTest.swift
-//  DogSearchClientTest
+//  DogSearchTests
 //
-//  Created by TextalkMedia-Emre on 2022-10-09.
+//  Created by TextalkMedia-Emre on 2022-10-17.
 //
 
 import XCTest
 
-final class DogSearchClientTest: XCTestCase {
-  
-  func testExample() throws {
-    let bundle = Bundle(for: DogSearchClientTest.self)
-    let url = bundle.url(forResource: "photo", withExtension: "json")!
-    let data = try Data(contentsOf: url)
-    let photo = try JSONDecoder().decode(BreedImages.self, from: data)
+class DogSearchClientTest: XCTestCase {
 
-    XCTAssertEqual(photo.message[0], "https://images.dog.ceo/breeds/bulldog-boston/20200710_175933.jpg")
+  func testExample() throws {
+    let bundle = Bundle(for: DogSearchDetailClientTest.self)
+    let url = bundle.url(forResource: "breed", withExtension: "json")!
+    let data = try Data(contentsOf: url)
+    let breed = try JSONDecoder().decode(DogBreed.self, from: data)
+
+    XCTAssertEqual(breed.message.keys.first, "affenpinscher")
+    XCTAssertEqual(breed.status, "success")
+
   }
 }
