@@ -12,7 +12,8 @@ final class BreedListViewControllerBuilder {
   static func make() -> BreedListViewController {
     let viewController = BreedListViewController()
     let client = BreedListClient()
-    viewController.viewModel = BreedListViewModel(service: client)
+    let detailClient = BreedListDetailClient()
+    viewController.viewModel = BreedListViewModel(breedListClient: client, breedListDetailClient: detailClient)
     return viewController
   }
 }
