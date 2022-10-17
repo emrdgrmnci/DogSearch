@@ -12,7 +12,6 @@ import Combine
 protocol BreedListDetailViewModelProtocol: AnyObject {
   var delegate: BreedListDetailViewModelDelegate? { get set }
   func load()
-  func getFavoriteListFromFileManager() -> [String]
   func selectBreed(at index: Int, imagePath: [String])
 }
 
@@ -32,7 +31,6 @@ enum BreedListDetailViewRoute {
 //MARK: - BreedListDetailed data presentation
 protocol BreedListDetailViewModelDelegate: AnyObject {
   func showDetail(_ presentation: BreedListDetailPresentation)
-  func handleViewModelOutput(_ output: BreedListDetailViewModelOutput)
   func navigate(to route: BreedListDetailViewRoute)
   func notifyTableView()
 }
