@@ -12,52 +12,36 @@ final class BreedListDetailViewController: UIViewController {
   
   //MARK: - Variables
   private var tableView =  UITableView()
-  
   private var breeds: DogBreed = .init(message: [:], status: "")
   private var breedImages: BreedImages = .init(message: [], status: "")
-  
   var detailViewModel: BreedListDetailViewModelProtocol!
-  
   private var cancellable: AnyCancellable?
   
   lazy var activityIndicator: UIActivityIndicatorView = {
     return createActivityIndicator()
   }()
   
+
+  //MARK: - View Lifecycle
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    detailViewModel.delegate = self
+    detailViewModel.load()
+    setupNavigationBar()
+    configureTableView()
+    notifyTableView()
+  }
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     tableView.frame = view.bounds
   }
   
-  //MARK: - View Lifecycle
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    detailViewModel.delegate = self
-    detailViewModel.load()
-    
-    setupNavigationBar()
-    configureTableView()
-  }
-  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
     view.backgroundColor = .systemBackground
-    
-    if #available(iOS 11.0, *) {
-      navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    self.tableView.reloadData()
   }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    if #available(iOS 11.0, *) {
-      navigationItem.hidesSearchBarWhenScrolling = true
-    }
-  }
-  
+
   //MARK: - Configure TableView
   private func configureTableView() {
     view.addSubview(tableView)
@@ -66,7 +50,7 @@ final class BreedListDetailViewController: UIViewController {
     tableView.allowsSelection = false
     tableView.rowHeight = 100
   }
-  
+
   //MARK: -  Set TableView Delegates
   private func setTableViewDelegates() {
     tableView.delegate = self
@@ -82,12 +66,12 @@ final class BreedListDetailViewController: UIViewController {
                                       .foregroundColor: UIColor.tintColor]
     navigationController?.navigationBar.standardAppearance = appearance
     navigationController?.navigationBar.scrollEdgeAppearance = appearance
-    navigationController?.navigationBar.prefersLargeTitles = true
+    navigationController?.navigationBar.prefersLargeTitles = false
     navigationController?.navigationBar.sizeToFit()
     
     navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favorites", style: .plain, target: self, action: #selector(goToFavorites))
   }
-  
+
   //MARK: - Go to Favorites
   @objc func goToFavorites() {
     let vc = FavoriteDogListViewController()
@@ -105,10 +89,10 @@ extension BreedListDetailViewController: UITableViewDataSource {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: BreedListDetailTableViewCell.reuseIdentifier, for: indexPath) as? BreedListDetailTableViewCell else {
       fatalError("BreedListDetailTableViewCell not found")
     }
-    
-    cell.index = indexPath
+
     cell.configure(with: self.breedImages, indexPath: indexPath)
-    
+    cell.index = indexPath
+
     cell.cancellable = cell.tapButton.compactMap{$0} .sink { [weak self] selectedIndex in
       self?.detailViewModel.selectBreed(at: selectedIndex.row, imagePath: self?.breedImages.message ?? [""])
     }
@@ -117,7 +101,6 @@ extension BreedListDetailViewController: UITableViewDataSource {
 }
 // MARK: - UITableViewDelegate
 extension BreedListDetailViewController: UITableViewDelegate {
-  
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 250
   }
@@ -125,20 +108,6 @@ extension BreedListDetailViewController: UITableViewDelegate {
 
 //MARK: - MainViewModelDelegate
 extension BreedListDetailViewController: BreedListDetailViewModelDelegate {
-  func handleViewModelOutput(_ output: BreedListDetailViewModelOutput) {
-    switch output {
-    case .setTitle(let title):
-      navigationItem.title = title
-    case .setLoading(let isLoading):
-      isLoading ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-    case .showFavoriteImages(let favImages):
-      self.breedImages = favImages
-      self.notifyTableView()
-    case .showError(_):
-      break
-    }
-  }
-  
   func navigate(to route: BreedListDetailViewRoute) {
     switch route {
     case .detail(let viewModel):
@@ -153,11 +122,7 @@ extension BreedListDetailViewController: BreedListDetailViewModelDelegate {
       self.tableView.reloadData()
     }
   }
-  
-  func selectBreed(at index: Int, breedQuery: String) {
-    
-  }
-  
+
   func showDetail(_ presentation: BreedListDetailPresentation) {
     self.breedImages.message = presentation.breedImages
   }
