@@ -14,7 +14,6 @@ final class BreedListViewController: UIViewController {
   private var tableView =  UITableView()
   private var breeds: DogBreed = .init(message: [:], status: "")
   private var breedImages: BreedImages = .init(message: [], status: "")
-
   //store subscriptions
   private var subscriptions: Set<AnyCancellable> = []
 
@@ -44,20 +43,8 @@ final class BreedListViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-
     view.backgroundColor = .systemBackground
-
-    if #available(iOS 11.0, *) {
-      navigationItem.hidesSearchBarWhenScrolling = false
-    }
     self.tableView.reloadData()
-  }
-
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    if #available(iOS 11.0, *) {
-      navigationItem.hidesSearchBarWhenScrolling = true
-    }
   }
 
   //MARK: - Configure TableView
