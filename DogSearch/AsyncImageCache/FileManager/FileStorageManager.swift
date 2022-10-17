@@ -109,13 +109,8 @@ final class FileStorageManager {
   }
 
   func getBreedByFilePath(fileNamed: String) throws -> String? {
-    do {
-      let splits = fileNamed.components(separatedBy: "/")
-      let splitsBreed = splits.last?.components(separatedBy: "__")
-      return splitsBreed?.first
-    } catch {
-      debugPrint(error)
-      throw Error.readingFailed
-    }
+    let splits = fileNamed.components(separatedBy: "/")
+    let splitsBreed = splits.last?.components(separatedBy: "__")
+    return splitsBreed?.first
   }
 }

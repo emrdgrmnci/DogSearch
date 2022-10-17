@@ -25,27 +25,18 @@ public final class ImageLoader {
 
   public func loadImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
     if let image = cache[url] {
-      return Just(image).eraseToAnyPublisher()
+      return Just(image).eraseToAnyPublisher() //Returns Just publisher with the cached image if any.
     }
     return URLSession.shared.dataTaskPublisher(for: url)
       .map { (data, response) -> UIImage? in return UIImage(data: data) }
       .catch { error in return Just(nil) }
       .handleEvents(receiveOutput: {[unowned self] image in
         guard let image = image else { return }
-        self.cache[url] = image
+          self.cache[url] = image
       })
       .print("Image loading \(url):")
       .subscribe(on: backgroundQueue)
       .receive(on: RunLoop.main)
       .eraseToAnyPublisher()
   }
-}
-
-extension UIImage {
-  var jpeg: Data? { jpegData(compressionQuality: 1) }  // QUALITY min = 0 / max = 1
-  var png: Data? { pngData() }
-}
-
-extension Data {
-  var uiImage: UIImage? { UIImage(data: self) }
 }
