@@ -15,29 +15,19 @@ final class BreedListDetailViewModel: BreedListDetailViewModelProtocol {
   private var favoritePathList: [String]?
   weak var delegate: BreedListDetailViewModelDelegate?
   private let presentation: BreedListDetailPresentation
-  
+
   init(breedImageDetail: BreedImages) {
     self.presentation = BreedListDetailPresentation(breedImageDetail: breedImageDetail)
     self.photoPath = ""
     self.favoritePathList = [""]
   }
-  
-  //MARK: - Get Favorite List from FileManager
-  func getFavoriteListFromFileManager() -> [String] {
-    do {
-      favoritePathList = try FileStorageManager.shared.readAllFiles() ?? [""]
-      
-      return favoritePathList ?? [""]
-      
-    } catch { return [""] }
-  }
-  
+    
   //MARK: - Select Breead at Index
   func selectBreed(at index: Int, imagePath: [String]) {
     photoPath = imagePath[index]
     
     do {
-      try FileStorageManager.shared.save(fileNamed: photoPath ?? "")
+      _ = try FileStorageManager.shared.save(fileNamed: photoPath ?? "")
     } catch { }
   }
   
