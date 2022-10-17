@@ -33,46 +33,37 @@ class FavoriteDogListTableViewCell: UITableViewCell {
 
   override public func prepareForReuse() {
     super.prepareForReuse()
-    favoriteImageView.image = nil
-    favoriteImageView.alpha = 0.0
-    breedLabel.alpha = 0.0
-    animator?.stopAnimation(true)
+//    favoriteImageView.image = nil
+//    favoriteImageView.alpha = 0.0
+//    breedLabel.alpha = 0.0
+ showFavoriteImage()
+
     cancellable?.cancel()
   }
 
-  //MARK: - Load Image From File Manager
-  private func loadImageFromFM(withName name : String, from folderName: String) -> UIImage? {
-    do {
-      let documentsFolderURL = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-      let imageURL = documentsFolderURL.appendingPathComponent(folderName).appendingPathComponent(name)
-      let data = try Data(contentsOf: imageURL)
-      return UIImage(data: data)
-    } catch {
-      return nil
-    }
-  }
-
   //MARK: - Show Favorite Image
-  private func showFavoriteImage(image: UIImage?) {
+  private func showFavoriteImage() {
     favoriteImageView.alpha = 0.0
     breedLabel.alpha = 0.0
     animator?.stopAnimation(false)
-    favoriteImageView.image = image
     animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3, delay: 0, options: .curveLinear, animations: {
       self.favoriteImageView.alpha = 1.0
       self.breedLabel.alpha = 1.0
     })
+    animator?.fractionComplete = 0.25
+    animator?.stopAnimation(true)
+    animator?.finishAnimation(at: .current)
   }
 
   //MARK: - Load Favorite Image
-  private func loadFavoriteImage(for breed: String) -> AnyPublisher<UIImage?, Never> {
-    return Just(breed)
-      .flatMap({ img -> AnyPublisher<UIImage?, Never> in
-        let url = URL(string: breed)!
-        return ImageLoader.shared.loadImage(from: url)
-      })
-      .eraseToAnyPublisher()
-  }
+//  private func loadFavoriteImage(for breed: String) -> AnyPublisher<UIImage?, Never> {
+//    return Just(breed)
+//      .flatMap({ img -> AnyPublisher<UIImage?, Never> in
+//        guard let url = URL(string: breed) else { return Result.Publisher(nil).eraseToAnyPublisher() }
+//        return ImageLoader.shared.loadImage(from: url)
+//      })
+//      .eraseToAnyPublisher()
+//  }
 
   //MARK: - Setup UI
   private func setupUI() {
