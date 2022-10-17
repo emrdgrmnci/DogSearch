@@ -28,6 +28,8 @@ final class BreedListDetailTableViewCell: UITableViewCell {
   // Single Publisher per cell
   let tapButton = PassthroughSubject<IndexPath?, Never>()
 
+  private var fileManagerReadSavedURLs: [String]?
+
   //View Lifecycles
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -49,8 +51,6 @@ final class BreedListDetailTableViewCell: UITableViewCell {
   //MARK: - Reusable cell
   override public func prepareForReuse() {
     super.prepareForReuse()
-    breedImageView.image = nil
-    breedImageView.alpha = 0.0
     animator?.stopAnimation(true)
     cancellable?.cancel()
   }
@@ -58,28 +58,27 @@ final class BreedListDetailTableViewCell: UITableViewCell {
   //MARK: - Configure cell
   public func configure(with image: BreedImages, indexPath: IndexPath) {
     self.index = indexPath
-    self.breedImages = image
 
-    let breedImagesFromAPI = self.breedImages?.message[indexPath.row] ?? ""
+    let breedImagesFromAPI = image.message[indexPath.row]
 
+    do {
+      fileManagerReadSavedURLs = try FileStorageManager.shared.readAllRemoteURLs()
+      if fileManagerReadSavedURLs?.contains(breedImagesFromAPI) == true {
+        self.favoriteButton.isSelected = true
+        self.favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+      } else {
+        self.favoriteButton.isSelected = false
+        self.favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+      }
+    } catch {
+      print("Error when reading FM")
+    }
     cancellable = loadImage(for: breedImagesFromAPI).sink { [unowned self] image in
-      do {
-        let fileManagerReadSavedURLs = try FileStorageManager.shared.readAllRemoteURLs()
-        DispatchQueue.main.async {
-          if fileManagerReadSavedURLs?.contains(breedImagesFromAPI) == true {
-            self.favoriteButton.isSelected = true
-            self.favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-          } else {
-            self.favoriteButton.isSelected = false
-            self.favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
-          }
-        }
-      } catch { }
       self.showImage(image: image)
     }
   }
 
-  //MARK: - Show Detail View Image
+  //MARK: - Show Detail View's Image
   private func showImage(image: UIImage?) {
     breedImageView.alpha = 0.0
     animator?.stopAnimation(false)
@@ -96,7 +95,7 @@ final class BreedListDetailTableViewCell: UITableViewCell {
   private func loadImage(for breed: String) -> AnyPublisher<UIImage?, Never> {
     return Just(breed)
       .flatMap({ img -> AnyPublisher<UIImage?, Never> in
-        let url = URL(string: breed)!
+        guard let url = URL(string: breed) else { return Result.Publisher(nil).eraseToAnyPublisher() }
         return ImageLoader.shared.loadImage(from: url)
       })
       .eraseToAnyPublisher()
