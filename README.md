@@ -4,12 +4,11 @@
 Purpose of the project
 ======================
 
-Implement a photo gallery application populated with data got from: (https://dog.ceo/dog-api).
+Implement a dog photo gallery application populated with data got from: (https://dog.ceo/dog-api).
 
-The Photo gallery is a grid of thumbs. When the users click on a photo, they can navigate to the detail page, with some details I have in the JSON. 
-Search functionality to the top of the listing page. When the users type something, displays the new content as they typed. If no content is available with the user-provided keyword, handles the no data state and let them know.
+When the users click on a photo, they can navigate to the detail page, with some details I have in the JSON and also able to add liked images to favorites with clicking on ⭐️ button in each cell. 
 
-This project has only one dependency which is [Kingfisher](https://github.com/onevcat/Kingfisher) that implemented using Swift Package Manager. The library provides an async image downloader with cache support.
+Project has an image downloader with cache support and saving that images to device disk to keep cached data permanently.
 
 Here are the screens
 ======================
@@ -17,7 +16,6 @@ Here are the screens
   <img src="ScreenFiles/ss1.png" width="200"/>&nbsp; 
     <img src="ScreenFiles/ss2.png" width="200"/>&nbsp; 
       <img src="ScreenFiles/ss3.png" width="200"/>&nbsp; 
-            <img src="ScreenFiles/ss4.png" width="200"/>&nbsp; 
   </br> 
 </p>
 
@@ -25,5 +23,5 @@ Here are the screens
 
 * [MVVM]
 * [Combine]
-* [Compositional Layout]
-* [Kingfisher]
+* [NSCache]
+* [FileManager]
