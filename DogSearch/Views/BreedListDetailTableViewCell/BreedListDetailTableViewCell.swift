@@ -51,6 +51,7 @@ final class BreedListDetailTableViewCell: UITableViewCell {
   //MARK: - Reusable cell
   override public func prepareForReuse() {
     super.prepareForReuse()
+    breedImageView.image = UIImage(systemName: "photo")
     animator?.stopAnimation(true)
     cancellable?.cancel()
   }
@@ -60,10 +61,9 @@ final class BreedListDetailTableViewCell: UITableViewCell {
     self.index = indexPath
 
     let breedImagesFromAPI = image.message[indexPath.row]
-
     do {
-      fileManagerReadSavedURLs = try FileStorageManager.shared.readAllRemoteURLs()
-      if fileManagerReadSavedURLs?.contains(breedImagesFromAPI) == true {
+      self.fileManagerReadSavedURLs = try FileStorageManager.shared.readAllRemoteURLs()
+      if self.fileManagerReadSavedURLs?.contains(breedImagesFromAPI) == true {
         self.favoriteButton.isSelected = true
         self.favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
       } else {
@@ -73,7 +73,7 @@ final class BreedListDetailTableViewCell: UITableViewCell {
     } catch {
       print("Error when reading FM")
     }
-    cancellable = loadImage(for: breedImagesFromAPI).sink { [unowned self] image in
+    self.cancellable = self.loadImage(for: breedImagesFromAPI).sink { [unowned self] image in
       self.showImage(image: image)
     }
   }

@@ -15,11 +15,7 @@ final class BreedListDetailViewController: UIViewController {
   private var breeds: DogBreed = .init(message: [:], status: "")
   private var breedImages: BreedImages = .init(message: [], status: "")
   var detailViewModel: BreedListDetailViewModelProtocol!
-  private var cancellable: AnyCancellable?
-  
-  lazy var activityIndicator: UIActivityIndicatorView = {
-    return createActivityIndicator()
-  }()
+  var breedForIndexPath: [IndexPath: AnyCancellable] = [:]
   
 
   //MARK: - View Lifecycle
@@ -93,10 +89,16 @@ extension BreedListDetailViewController: UITableViewDataSource {
     cell.configure(with: self.breedImages, indexPath: indexPath)
     cell.index = indexPath
 
-    cell.cancellable = cell.tapButton.compactMap{$0} .sink { [weak self] selectedIndex in
-      self?.detailViewModel.selectBreed(at: selectedIndex.row, imagePath: self?.breedImages.message ?? [""])
-    }
+
+    breedForIndexPath[indexPath] = cell.tapButton.compactMap{$0} .sink { [weak self] selectedIndex in
+        self?.detailViewModel.selectBreed(at: selectedIndex.row, imagePath: self?.breedImages.message ?? [""])
+      print("user tap button on cell")
+      }
     return cell
+  }
+
+  func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    breedForIndexPath[indexPath] = nil
   }
 }
 // MARK: - UITableViewDelegate

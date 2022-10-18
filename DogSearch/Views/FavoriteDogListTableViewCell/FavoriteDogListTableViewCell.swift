@@ -33,11 +33,7 @@ class FavoriteDogListTableViewCell: UITableViewCell {
 
   override public func prepareForReuse() {
     super.prepareForReuse()
-//    favoriteImageView.image = nil
-//    favoriteImageView.alpha = 0.0
-//    breedLabel.alpha = 0.0
- showFavoriteImage()
-
+    showFavoriteImage()
     cancellable?.cancel()
   }
 
@@ -54,16 +50,6 @@ class FavoriteDogListTableViewCell: UITableViewCell {
     animator?.stopAnimation(true)
     animator?.finishAnimation(at: .current)
   }
-
-  //MARK: - Load Favorite Image
-//  private func loadFavoriteImage(for breed: String) -> AnyPublisher<UIImage?, Never> {
-//    return Just(breed)
-//      .flatMap({ img -> AnyPublisher<UIImage?, Never> in
-//        guard let url = URL(string: breed) else { return Result.Publisher(nil).eraseToAnyPublisher() }
-//        return ImageLoader.shared.loadImage(from: url)
-//      })
-//      .eraseToAnyPublisher()
-//  }
 
   //MARK: - Setup UI
   private func setupUI() {
