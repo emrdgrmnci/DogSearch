@@ -18,13 +18,10 @@ final class BreedListDetailTableViewCell: UITableViewCell {
   private var breedImageView: UIImageView!
   private var favoriteButton: UIButton!
   private var animator: UIViewPropertyAnimator?
-
-  private var breedImages: BreedImages?
   var index: IndexPath?
 
   // store publisher here
-  var cancellable: AnyCancellable?
-
+  private var cancellable: AnyCancellable?
   // Single Publisher per cell
   let tapButton = PassthroughSubject<IndexPath?, Never>()
 

@@ -6,19 +6,26 @@
 //
 
 import Foundation
+import UIKit.UIImage
 import Combine
 
+//Things should send from View to ViewModel
 //MARK: - FavoriteDogListViewModelProtocol
 protocol FavoriteDogListViewModelProtocol {
+  var searchResultsPublisher: Published<[String]>.Publisher { get }
   var delegate: FavoriteDogListViewModelDelegate? { get set }
-  func load() -> [String]
+  func load()
+  func searchTextManipulation(searchText: String)
+  func searchBarCancelButtonClicked()
+  func updateSearchResult(text: String?)
+  func checkFavoriteImage()
 }
 
 //MARK: - FavoriteDogListViewModelOutput
 enum FavoriteDogListViewModelOutput: Equatable {
   case setTitle(String)
   case setLoading(Bool)
-  case showFavorites(BreedImages)
+  case showFavorites(FavoriteDogListPresentation)
   case showError(Error)
 }
 
@@ -26,6 +33,8 @@ enum FavoriteDogListViewModelOutput: Equatable {
 protocol FavoriteDogListViewModelDelegate: AnyObject {
   func handleViewModelOutput(_ output: FavoriteDogListViewModelOutput)
   func notifyTableView()
+  func isTableView(hidden: Bool)
+  func isShowNoFavoriteLabel(hidden: Bool)
 }
 
 //MARK: - FavoriteDogListViewModelOutput

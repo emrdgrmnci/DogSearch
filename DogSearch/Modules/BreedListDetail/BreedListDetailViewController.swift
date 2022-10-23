@@ -12,11 +12,9 @@ final class BreedListDetailViewController: UIViewController {
   
   //MARK: - Variables
   private var tableView =  UITableView()
-  private var breeds: DogBreed = .init(message: [:], status: "")
   private var breedImages: BreedImages = .init(message: [], status: "")
   var detailViewModel: BreedListDetailViewModelProtocol!
   var breedForIndexPath: [IndexPath: AnyCancellable] = [:]
-  
 
   //MARK: - View Lifecycle
   override func viewDidLoad() {
@@ -64,14 +62,12 @@ final class BreedListDetailViewController: UIViewController {
     navigationController?.navigationBar.scrollEdgeAppearance = appearance
     navigationController?.navigationBar.prefersLargeTitles = false
     navigationController?.navigationBar.sizeToFit()
-    
     navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favorites", style: .plain, target: self, action: #selector(goToFavorites))
   }
 
   //MARK: - Go to Favorites
   @objc func goToFavorites() {
-    let vc = FavoriteDogListViewController()
-    navigationController?.pushViewController(vc, animated: true)
+    self.detailViewModel?.goToFavorite()
   }
 }
 
@@ -89,11 +85,10 @@ extension BreedListDetailViewController: UITableViewDataSource {
     cell.configure(with: self.breedImages, indexPath: indexPath)
     cell.index = indexPath
 
-
     breedForIndexPath[indexPath] = cell.tapButton.compactMap{$0} .sink { [weak self] selectedIndex in
-        self?.detailViewModel.selectBreed(at: selectedIndex.row, imagePath: self?.breedImages.message ?? [""])
+      self?.detailViewModel.selectBreed(at: selectedIndex.row, imagePath: self?.breedImages.message ?? [""])
       print("user tap button on cell")
-      }
+    }
     return cell
   }
 
@@ -113,8 +108,7 @@ extension BreedListDetailViewController: BreedListDetailViewModelDelegate {
   func navigate(to route: BreedListDetailViewRoute) {
     switch route {
     case .detail(let viewModel):
-      let vc = FavoriteDogListViewController()
-      vc.viewModel = viewModel
+      let vc = FavoriteDogListViewControllerBuilder.make(with: viewModel)
       navigationController?.pushViewController(vc, animated: false)
     }
   }
@@ -129,4 +123,3 @@ extension BreedListDetailViewController: BreedListDetailViewModelDelegate {
     self.breedImages.message = presentation.breedImages
   }
 }
-

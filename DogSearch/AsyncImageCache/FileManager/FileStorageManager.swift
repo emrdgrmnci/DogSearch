@@ -19,6 +19,7 @@ final class FileStorageManager {
     case fileNotExists
   }
   let fileManager: FileManager
+
   init(fileManager: FileManager = .default) {
     self.fileManager = fileManager
   }
@@ -106,6 +107,15 @@ final class FileStorageManager {
       debugPrint(error)
       throw Error.readingFailed
     }
+  }
+
+  func removeFileFromFileManager(filePath: String) throws -> Void {
+    do {
+      try FileManager.default.removeItem(at: URL(string: filePath)!)
+    } catch {
+      print("Could not delete file, probably read-only filesystem")
+    }
+    return
   }
 
   func getBreedByFilePath(fileNamed: String) throws -> String? {

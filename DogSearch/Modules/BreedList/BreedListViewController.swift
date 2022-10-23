@@ -9,44 +9,44 @@ import UIKit
 import Combine
 
 final class BreedListViewController: UIViewController {
-
+  
   //MARK: - Variables
   private var tableView =  UITableView()
   private var breeds: DogBreed = .init(message: [:], status: "")
   private var breedImages: BreedImages = .init(message: [], status: "")
   //store subscriptions
   private var subscriptions: Set<AnyCancellable> = []
-
+  
   var viewModel: BreedListViewModelProtocol! {
     didSet {
       viewModel.delegate = self
     }
   }
-
+  
   lazy var activityIndicator: UIActivityIndicatorView = {
     return createActivityIndicator()
   }()
-
+  
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     tableView.frame = view.bounds
   }
-
+  
   //MARK: - View Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    
     viewModel.load()
     setupNavigationBar()
     configureTableView()
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     view.backgroundColor = .systemBackground
     self.tableView.reloadData()
   }
-
+  
   //MARK: - Configure TableView
   private func configureTableView() {
     view.addSubview(tableView)
@@ -54,13 +54,13 @@ final class BreedListViewController: UIViewController {
     setTableViewDelegates()
     tableView.rowHeight = 100
   }
-
+  
   //MARK: -  Set TableView Delegates
   private func setTableViewDelegates() {
     tableView.delegate = self
     tableView.dataSource = self
   }
-
+  
   // MARK: - NavigationBar
   private func setupNavigationBar() {
     let appearance = UINavigationBarAppearance()
@@ -72,15 +72,15 @@ final class BreedListViewController: UIViewController {
     navigationController?.navigationBar.scrollEdgeAppearance = appearance
     navigationController?.navigationBar.prefersLargeTitles = true
     navigationController?.navigationBar.sizeToFit()
-
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favorites", style: .plain, target: self, action: #selector(goToFavorites))
+    
+    //    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favorites", style: .plain, target: self, action: #selector(goToFavorites))
   }
-
+  
   //MARK: - Go to Favorites
-  @objc func goToFavorites() {
-    let vc = FavoriteDogListViewController()
-    navigationController?.pushViewController(vc, animated: true)
-  }
+  //  @objc func goToFavorites() {
+  //    let vc = FavoriteDogListViewController()
+  //    navigationController?.pushViewController(vc, animated: true)
+  //  }
 }
 
 // MARK: - UITableViewDataSource
@@ -88,12 +88,12 @@ extension BreedListViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return breeds.message.values.count
   }
-
+  
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: BreedListTableViewCell.reuseIdentifier, for: indexPath) as? BreedListTableViewCell else {
       fatalError("BreedListTableViewCell not found")
     }
-
+    
     let breedKeys = breeds.message.keys.sorted(by: <)
     cell.configure(with: breedKeys[indexPath.row].capitalized)
     return cell
@@ -105,7 +105,7 @@ extension BreedListViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 50
   }
-
+  
   // MARK: - Routing
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
@@ -131,17 +131,17 @@ extension BreedListViewController: BreedListViewModelDelegate{
       break
     }
   }
-
+  
   func notifyTableView() {
     DispatchQueue.main.async {
       self.tableView.reloadData()
     }
   }
-
+  
   func navigate(to route: BreedListViewRoute) {
     switch route {
     case .detail(let viewModel):
-      let viewController = BreedListDetailViewControllerBuilder.make(with: viewModel)
+      let viewController = BreedListDetailViewControllerBuilder.make(with: viewModel, with: self.breedImages.message)
       navigationController?.pushViewController(viewController, animated: false)
     }
   }

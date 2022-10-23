@@ -13,6 +13,7 @@ protocol BreedListDetailViewModelProtocol: AnyObject {
   var delegate: BreedListDetailViewModelDelegate? { get set }
   func load()
   func selectBreed(at index: Int, imagePath: [String])
+  func goToFavorite()
 }
 
 //MARK: - BreedListDetailViewModelOutput
@@ -28,7 +29,7 @@ enum BreedListDetailViewRoute {
   case detail(FavoriteDogListViewModelProtocol)
 }
 
-//MARK: - BreedListDetailed data presentation
+//MARK: - BreedListDetailed data presentation (View is delegate)
 protocol BreedListDetailViewModelDelegate: AnyObject {
   func showDetail(_ presentation: BreedListDetailPresentation)
   func navigate(to route: BreedListDetailViewRoute)

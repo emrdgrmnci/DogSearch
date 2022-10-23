@@ -8,69 +8,78 @@
 import UIKit
 import Combine
 
-enum SectionKind: Int, CaseIterable {
-  case main
-}
-
 final class FavoriteDogListViewController: UIViewController {
-  
+
   //MARK: - Variables
   private var tableView =  UITableView()
-  private var breedImages: BreedImages = .init(message: [], status: "")
-  private var favoriteImagesFromFileManager = [UIImage]()
   private var readAllFilesFromFileManager = [String]()
-  
+  private var showNoFavoriteLabel: UILabel!
+  private var searchController: UISearchController!
+  private var favList: FavoriteDogListPresentation?
+
+  //a searchText property the will be a 'Publisher'
+  //that emits changes from the searchBar on the search controller
+  //to subscribe to the searchText's 'Publisher' a $ needs to be prefixed
+  //to searchText => $searchText
+
+  @Published var searchText: String?
+  private var subscriptions: Set<AnyCancellable> = []
+  var searchResultsSubscription : AnyCancellable! = nil
+
+  @Published var searchResults = [String]()
+  @Published var searchFinalResults = [String]()
+
   var viewModel: FavoriteDogListViewModelProtocol! {
     didSet {
       viewModel.delegate = self
     }
   }
-  
+
   private lazy var activityIndicator: UIActivityIndicatorView = {
     return createActivityIndicator()
   }()
-  
+
   //MARK: - View Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    // Read Favorite images from FileManager
-    do {
-      readAllFilesFromFileManager = try FileStorageManager.shared.readAllFiles() ?? [""]
-      for file in readAllFilesFromFileManager {
-        try favoriteImagesFromFileManager.append(FileStorageManager.shared.read(fileNamed: file) ?? UIImage())
-      }
-    } catch { }
-    
+    viewModel.load()
     setupNavigationBar()
+    setupNoFavoriteLabel()
+    checkFavoriteImage()
     configureTableView()
+
+    searchResultsSubscription = viewModel.searchResultsPublisher
+      .receive(on: RunLoop.main)
+      .assign(to: \.searchFinalResults, on: self)
+    print("searchFinalResults", searchFinalResults)
+    notifyTableView()
+    configureSearchController()
   }
-  
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     tableView.frame = view.bounds
   }
-  
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     view.backgroundColor = .systemBackground
   }
-  
+
   //MARK: - Configure TableView UI
   private func configureTableView() {
     view.addSubview(tableView)
-    tableView.register(FavoriteDogListTableViewCell.self, forCellReuseIdentifier: FavoriteDogListTableViewCell.reuseIdentifier)
     setTableViewDelegates()
+    tableView.register(FavoriteDogListTableViewCell.self, forCellReuseIdentifier: FavoriteDogListTableViewCell.reuseIdentifier)
     tableView.allowsSelection = false
     tableView.rowHeight = 100
   }
-  
-  //MARK: -  Set TableView Delegates
+
   private func setTableViewDelegates() {
     tableView.delegate = self
     tableView.dataSource = self
   }
-  
+
   // MARK: - NavigationBar
   private func setupNavigationBar() {
     title = "Favorites"
@@ -79,36 +88,94 @@ final class FavoriteDogListViewController: UIViewController {
     appearance.backgroundColor = .systemBackground
     appearance.titleTextAttributes = [.font: UIFont.boldSystemFont(ofSize: 20.0),
                                       .foregroundColor: UIColor.systemBackground]
-    
     navigationController?.navigationBar.standardAppearance = appearance
     navigationController?.navigationBar.scrollEdgeAppearance = appearance
-    navigationController?.navigationBar.prefersLargeTitles = true
+    navigationController?.navigationBar.prefersLargeTitles = false
     navigationController?.navigationBar.sizeToFit()
   }
-}
 
+  //MARK: - Setup UI
+  private func setupNoFavoriteLabel() {
+    let stackView = UIStackView()
+    stackView.axis = .horizontal
+    stackView.distribution = .fillProportionally
+    stackView.spacing = 8
+    stackView.alignment = .center
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(stackView)
+    NSLayoutConstraint.activate([
+      stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+      stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+      stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
+      stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8)
+    ])
+
+    showNoFavoriteLabel = UILabel()
+    showNoFavoriteLabel.text = "There is no favorite image!"
+    showNoFavoriteLabel.textAlignment = .center
+    stackView.addArrangedSubview(showNoFavoriteLabel)
+    NSLayoutConstraint.activate([
+      showNoFavoriteLabel.heightAnchor.constraint(equalToConstant: 40),
+      showNoFavoriteLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20)
+    ])
+  }
+
+  private func configureSearchController() {
+    searchController = UISearchController(searchResultsController: nil)
+    navigationItem.searchController = searchController
+    searchController.searchResultsUpdater = self // delegate
+    searchController.searchBar.delegate = self
+    searchController.searchBar.autocapitalizationType = .none
+    searchController.searchBar.placeholder = "Type at least 2 characters."
+  }
+
+  //MARK: - Check if there is a favorite image
+  private func checkFavoriteImage() {
+    viewModel.checkFavoriteImage()
+  }
+}
 // MARK: - UITableViewDataSource
 extension FavoriteDogListViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return favoriteImagesFromFileManager.count
+    if !searchFinalResults.contains("") {
+      self.searchResults = searchFinalResults
+    }
+    return searchResults.count == 0 ? favList?.favImages.count ?? 0 : searchResults.count
   }
-  
+
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: FavoriteDogListTableViewCell.reuseIdentifier, for: indexPath) as? FavoriteDogListTableViewCell else {
       fatalError("FavoriteDogListTableViewCell not found")
     }
-    
-    let favImage = self.favoriteImagesFromFileManager[indexPath.row]
-    cell.index = indexPath
-    
-    if favoriteImagesFromFileManager.count != 0 {
-      cell.favoriteImageView.image = favImage
+
+    if !searchFinalResults.contains("") {
+      self.searchResults = searchFinalResults
     }
-    
-    do {
-      cell.breedLabel.text = try FileStorageManager.shared.getBreedByFilePath(fileNamed: readAllFilesFromFileManager[indexPath.row])
-    } catch {}
+
+    let favImage = favList?.favImages
+    if searchResults.count == 0 {
+      cell.configure(with: favImage ?? [""], indexPath: indexPath)
+    } else {
+      cell.configure(with: searchResults, indexPath: indexPath)
+    }
+    cell.index = indexPath
     return cell
+  }
+}
+
+// MARK: - UISearchBarDelegate
+extension FavoriteDogListViewController: UISearchBarDelegate {
+  func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    searchBar.endEditing(true)
+    viewModel.searchBarCancelButtonClicked()
+  }
+}
+
+//MARK: - UISearchResultsUpdating
+extension FavoriteDogListViewController: UISearchResultsUpdating {
+  func updateSearchResults(for searchController: UISearchController) {
+    viewModel.updateSearchResult(text: searchController.searchBar.text)
+    searchText = searchController.searchBar.text ?? ""
   }
 }
 
@@ -117,28 +184,59 @@ extension FavoriteDogListViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 250
   }
+
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+      do {
+        let _ = try FileStorageManager.shared.removeFileFromFileManager(filePath: searchResults[indexPath.row])
+        searchResults.remove(at: indexPath.row)
+        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        self.tableView.reloadData()
+        self.checkFavoriteImage()
+      } catch { }
+    }
+  }
 }
 
-//MARK: - MainViewModelDelegate
-extension FavoriteDogListViewController: FavoriteDogListViewModelDelegate{
+extension FavoriteDogListViewController: FavoriteDogListViewModelDelegate {
+  func showFavorites(_ presentation: FavoriteDogListPresentation) {
+    self.readAllFilesFromFileManager = presentation.favImages
+  }
+
   func handleViewModelOutput(_ output: FavoriteDogListViewModelOutput) {
     switch output {
     case .setTitle(let title):
       navigationItem.title = title
     case .setLoading(let isLoading):
       isLoading ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-    case .showFavorites(let dogBreed):
-      self.breedImages = dogBreed
+    case .showFavorites(let favImages):
+      self.favList = favImages
       notifyTableView()
     case .showError(_):
-      break
+      self.tableView.isHidden = !self.tableView.isHidden
+      self.setupNoFavoriteLabel()
     }
   }
-  
-  //MARK: - Notify Favorites TableView
+
   func notifyTableView() {
     DispatchQueue.main.async {
       self.tableView.reloadData()
+    }
+  }
+
+  func isTableView(hidden: Bool) {
+    if hidden == true {
+      self.tableView.isHidden = true
+    } else {
+      self.tableView.isHidden = false
+    }
+  }
+
+  func isShowNoFavoriteLabel(hidden: Bool) {
+    if hidden == true {
+      self.showNoFavoriteLabel.isHidden = true
+    }  else {
+      self.showNoFavoriteLabel.isHidden = false
     }
   }
 }

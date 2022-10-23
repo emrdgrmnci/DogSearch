@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8027C0AB28F969F40072AA73 /* FileStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8027C0AA28F969F40072AA73 /* FileStorageManager.swift */; };
+		8047E78B29009FF2006229A4 /* FavoriteDogListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80565BD228F468AA00055BDC /* FavoriteDogListViewController.swift */; };
 		80565B9328F4650400055BDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80565B9228F4650400055BDC /* AppDelegate.swift */; };
 		80565B9528F4650400055BDC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80565B9428F4650400055BDC /* SceneDelegate.swift */; };
 		80565B9A28F4650400055BDC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80565B9828F4650400055BDC /* Main.storyboard */; };
@@ -60,6 +61,13 @@
 		8098344F28FC35DA00C27480 /* MockViewModelOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80565BF928F46B4700055BDC /* MockViewModelOutput.swift */; };
 		8098345028FC35E300C27480 /* DogSearchDetailClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80565BFF28F46C2C00055BDC /* DogSearchDetailClientTest.swift */; };
 		8098345128FC36CA00C27480 /* BreedListContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808B899228F6B50300BABBF8 /* BreedListContracts.swift */; };
+		809E999429014ED800D64322 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80565BF028F46A9500055BDC /* UIViewController+Ext.swift */; };
+		809E999529014EE100D64322 /* FavoriteDogListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80705D9728F75CB30099E96E /* FavoriteDogListTableViewCell.swift */; };
+		809E999829016DE500D64322 /* FavoriteDogListPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809E999729016DE500D64322 /* FavoriteDogListPresentation.swift */; };
+		809E999929016F9300D64322 /* FavoriteDogListPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809E999729016DE500D64322 /* FavoriteDogListPresentation.swift */; };
+		809EA9762902F613009C0315 /* FavoriteDogListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80565BD728F468EC00055BDC /* FavoriteDogListViewModel.swift */; };
+		809EA97729031EFB009C0315 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808B89AB28F7032500BABBF8 /* ImageLoader.swift */; };
+		809EA97829031F08009C0315 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808B89A928F7030700BABBF8 /* ImageCache.swift */; };
 		80B0883628FC2B040012F7E8 /* BreedImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808B89A628F6EAEF00BABBF8 /* BreedImages.swift */; };
 		80B0883728FC2C540012F7E8 /* DogSearchDetailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80565BA928F4650500055BDC /* DogSearchDetailTests.swift */; };
 		80B0883828FC2D0D0012F7E8 /* BreedListDetailPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808B899F28F6C1C600BABBF8 /* BreedListDetailPresentation.swift */; };
@@ -131,6 +139,7 @@
 		808B89A628F6EAEF00BABBF8 /* BreedImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreedImages.swift; sourceTree = "<group>"; };
 		808B89A928F7030700BABBF8 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		808B89AB28F7032500BABBF8 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		809E999729016DE500D64322 /* FavoriteDogListPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteDogListPresentation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,6 +283,7 @@
 		80565BE128F4698400055BDC /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
+				809E999629016DD500D64322 /* FavoriteDogListPresentation */,
 				808B899B28F6C15500BABBF8 /* BreedListDetailPresentation */,
 			);
 			path = Presentations;
@@ -462,6 +472,14 @@
 			path = AsyncImageCache;
 			sourceTree = "<group>";
 		};
+		809E999629016DD500D64322 /* FavoriteDogListPresentation */ = {
+			isa = PBXGroup;
+			children = (
+				809E999729016DE500D64322 /* FavoriteDogListPresentation.swift */,
+			);
+			path = FavoriteDogListPresentation;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -604,6 +622,7 @@
 				80565BCA28F4681400055BDC /* DogBreed.swift in Sources */,
 				80565BD828F468EC00055BDC /* FavoriteDogListViewModel.swift in Sources */,
 				808B899528F6B57500BABBF8 /* BreedListViewController.swift in Sources */,
+				809E999829016DE500D64322 /* FavoriteDogListPresentation.swift in Sources */,
 				80565BEC28F46A4C00055BDC /* BreedListClientProtocol.swift in Sources */,
 				808B89AA28F7030700BABBF8 /* ImageCache.swift in Sources */,
 			);
@@ -613,23 +632,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8047E78B29009FF2006229A4 /* FavoriteDogListViewController.swift in Sources */,
 				806F651028FD53F7009579B5 /* BreedListClientProtocol.swift in Sources */,
+				809E999929016F9300D64322 /* FavoriteDogListPresentation.swift in Sources */,
 				80E269E228F56D2100B963CE /* MockDetailViewModelOutput.swift in Sources */,
 				806F650E28FD52E3009579B5 /* DogSearchTests.swift in Sources */,
 				80B0883828FC2D0D0012F7E8 /* BreedListDetailPresentation.swift in Sources */,
 				80E269E028F56D0300B963CE /* BreedListDetailViewModel.swift in Sources */,
 				8098344F28FC35DA00C27480 /* MockViewModelOutput.swift in Sources */,
 				80B497CB28F47047000B2511 /* DogSearchDetailClientTest.swift in Sources */,
+				809EA9762902F613009C0315 /* FavoriteDogListViewModel.swift in Sources */,
 				80565BCB28F4682400055BDC /* DogBreed.swift in Sources */,
 				806F650F28FD5324009579B5 /* BreedListViewModel.swift in Sources */,
+				809EA97829031F08009C0315 /* ImageCache.swift in Sources */,
+				809EA97729031EFB009C0315 /* ImageLoader.swift in Sources */,
 				80B0883A28FC2D4E0012F7E8 /* FileStorageManager.swift in Sources */,
 				80B0883628FC2B040012F7E8 /* BreedImages.swift in Sources */,
 				80565BAA28F4650500055BDC /* DogSearchDetailTests.swift in Sources */,
 				8090EA5528F5748A009DDFBC /* BreedListDetailContracts.swift in Sources */,
+				809E999429014ED800D64322 /* UIViewController+Ext.swift in Sources */,
 				806F651D28FD5B18009579B5 /* MockDogSearchDetailClient.swift in Sources */,
 				806F651728FD58A2009579B5 /* BreedListDetailClientProtocol.swift in Sources */,
 				806F651228FD54BB009579B5 /* MockDogSearchClient.swift in Sources */,
 				8098345128FC36CA00C27480 /* BreedListContracts.swift in Sources */,
+				809E999529014EE100D64322 /* FavoriteDogListTableViewCell.swift in Sources */,
 				806F652128FD5D55009579B5 /* APIServiceErrors.swift in Sources */,
 				80E269E328F56D7500B963CE /* FavoriteDogListContracts.swift in Sources */,
 				806F651B28FD5A68009579B5 /* DogSearchClientTest.swift in Sources */,
