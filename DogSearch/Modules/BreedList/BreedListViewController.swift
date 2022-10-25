@@ -35,15 +35,14 @@ final class BreedListViewController: UIViewController {
   //MARK: - View Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    
     viewModel.load()
-    setupNavigationBar()
     configureTableView()
   }
-  
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     view.backgroundColor = .systemBackground
+    setupNavigationBar()
     self.tableView.reloadData()
   }
   
@@ -63,6 +62,7 @@ final class BreedListViewController: UIViewController {
   
   // MARK: - NavigationBar
   private func setupNavigationBar() {
+    title = "Dog Breeds 🐶"
     let appearance = UINavigationBarAppearance()
     appearance.configureWithOpaqueBackground()
     appearance.backgroundColor = .systemBackground
@@ -72,15 +72,7 @@ final class BreedListViewController: UIViewController {
     navigationController?.navigationBar.scrollEdgeAppearance = appearance
     navigationController?.navigationBar.prefersLargeTitles = true
     navigationController?.navigationBar.sizeToFit()
-    
-    //    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favorites", style: .plain, target: self, action: #selector(goToFavorites))
   }
-  
-  //MARK: - Go to Favorites
-  //  @objc func goToFavorites() {
-  //    let vc = FavoriteDogListViewController()
-  //    navigationController?.pushViewController(vc, animated: true)
-  //  }
 }
 
 // MARK: - UITableViewDataSource

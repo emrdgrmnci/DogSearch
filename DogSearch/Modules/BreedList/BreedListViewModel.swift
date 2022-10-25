@@ -71,6 +71,7 @@ extension BreedListViewModel: BreedListViewModelProtocol {
           self?.breedImages = breedImages
           
           let viewModel = BreedListDetailViewModel(breedImageDetail: breedImages)
+          viewModel.detailNavigationTitle = breedQuery.capitalized
           self?.delegate?.navigate(to: .detail(viewModel))
         }
         .store(in: &subscriptions)
