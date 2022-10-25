@@ -18,7 +18,6 @@ protocol FavoriteDogListViewModelProtocol {
   func searchTextManipulation(searchText: String)
   func searchBarCancelButtonClicked()
   func updateSearchResult(text: String?)
-  func checkFavoriteImage()
 }
 
 //MARK: - FavoriteDogListViewModelOutput
