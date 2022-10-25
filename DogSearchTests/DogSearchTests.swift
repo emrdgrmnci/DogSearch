@@ -21,6 +21,11 @@ final class DogSearchTests: XCTestCase {
     viewModel.delegate = viewModelOutput
   }
 
+  override func tearDown() {
+    viewModel = nil
+    super.tearDown()
+  }
+
   func testExample() throws {
     viewModel.load()
     XCTAssertEqual(viewModelOutput.outputs.count, 5)

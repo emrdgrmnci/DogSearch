@@ -15,10 +15,6 @@ final class MockDetailViewModelOutput: BreedListDetailViewModelDelegate {
     outputs.append(presentation)
   }
 
-
-  func handleViewModelOutput(_ output: BreedListDetailViewModelOutput) { }
-
   func navigate(to route: BreedListDetailViewRoute) { }
-
   func notifyTableView() { }
 }

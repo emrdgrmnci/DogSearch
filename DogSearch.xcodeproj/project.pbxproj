@@ -189,18 +189,18 @@
 		80565B9128F4650400055BDC /* DogSearch */ = {
 			isa = PBXGroup;
 			children = (
-				808B89A828F702EC00BABBF8 /* AsyncImageCache */,
-				80565BF228F46AAD00055BDC /* Views */,
-				80565BEE28F46A7100055BDC /* Utility */,
-				80565BEA28F46A3900055BDC /* Services */,
-				80565BE828F469F700055BDC /* Resources */,
-				80565BE528F469B900055BDC /* Reachability */,
-				80565BE128F4698400055BDC /* Presentations */,
-				80565BCC28F4684800055BDC /* Modules */,
-				80565BC828F4680600055BDC /* DTOs */,
-				80565BC528F4674B00055BDC /* App */,
 				80565BC228F466D000055BDC /* APIEndpoint */,
+				80565BC528F4674B00055BDC /* App */,
+				808B89A828F702EC00BABBF8 /* AsyncImageCache */,
+				80565BC828F4680600055BDC /* DTOs */,
+				80565BCC28F4684800055BDC /* Modules */,
+				80565BE128F4698400055BDC /* Presentations */,
+				80565BE528F469B900055BDC /* Reachability */,
+				80565BE828F469F700055BDC /* Resources */,
+				80565BEA28F46A3900055BDC /* Services */,
 				80565BED28F46A6000055BDC /* SupportingFiles */,
+				80565BEE28F46A7100055BDC /* Utility */,
+				80565BF228F46AAD00055BDC /* Views */,
 			);
 			path = DogSearch;
 			sourceTree = "<group>";
@@ -208,12 +208,12 @@
 		80565BA828F4650500055BDC /* DogSearchTests */ = {
 			isa = PBXGroup;
 			children = (
-				80565BFB28F46B6F00055BDC /* Resources */,
-				80565BF628F46B1000055BDC /* Mocks */,
-				80565BA928F4650500055BDC /* DogSearchDetailTests.swift */,
-				80565BFF28F46C2C00055BDC /* DogSearchDetailClientTest.swift */,
 				806F651A28FD5A68009579B5 /* DogSearchClientTest.swift */,
+				80565BFF28F46C2C00055BDC /* DogSearchDetailClientTest.swift */,
+				80565BA928F4650500055BDC /* DogSearchDetailTests.swift */,
 				806F650D28FD52E3009579B5 /* DogSearchTests.swift */,
+				80565BF628F46B1000055BDC /* Mocks */,
+				80565BFB28F46B6F00055BDC /* Resources */,
 			);
 			path = DogSearchTests;
 			sourceTree = "<group>";
@@ -232,8 +232,8 @@
 			isa = PBXGroup;
 			children = (
 				80565B9228F4650400055BDC /* AppDelegate.swift */,
-				80565B9428F4650400055BDC /* SceneDelegate.swift */,
 				80565BC628F467A800055BDC /* AppRouter.swift */,
+				80565B9428F4650400055BDC /* SceneDelegate.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -241,8 +241,8 @@
 		80565BC828F4680600055BDC /* DTOs */ = {
 			isa = PBXGroup;
 			children = (
-				80565BC928F4681400055BDC /* DogBreed.swift */,
 				808B89A628F6EAEF00BABBF8 /* BreedImages.swift */,
+				80565BC928F4681400055BDC /* DogBreed.swift */,
 			);
 			path = DTOs;
 			sourceTree = "<group>";
@@ -283,8 +283,8 @@
 		80565BE128F4698400055BDC /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				809E999629016DD500D64322 /* FavoriteDogListPresentation */,
 				808B899B28F6C15500BABBF8 /* BreedListDetailPresentation */,
+				809E999629016DD500D64322 /* FavoriteDogListPresentation */,
 			);
 			path = Presentations;
 			sourceTree = "<group>";
@@ -310,8 +310,8 @@
 			isa = PBXGroup;
 			children = (
 				806F651E28FD5D32009579B5 /* APIServiceErrors */,
-				806F651428FD55C2009579B5 /* BreedListDetailClientProtocol */,
 				806F651328FD55AF009579B5 /* BreedListClientProtocol */,
+				806F651428FD55C2009579B5 /* BreedListDetailClientProtocol */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -344,9 +344,9 @@
 		80565BF228F46AAD00055BDC /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				80705D9628F75C900099E96E /* FavoriteDogListTableViewCell */,
 				808B89A328F6C24200BABBF8 /* BreedListDetailTableViewCell */,
 				808B898E28F6B42200BABBF8 /* BreedListTableViewCell */,
+				80705D9628F75C900099E96E /* FavoriteDogListTableViewCell */,
 			);
 			path = Views;
 			sourceTree = "<group>";
