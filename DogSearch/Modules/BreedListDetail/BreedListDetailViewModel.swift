@@ -11,6 +11,7 @@ import Combine
 final class BreedListDetailViewModel: BreedListDetailViewModelProtocol {
   
   //MARK: - Variables
+  var detailNavigationTitle: String
   private var photoPath: String?
   private var favoritePathList: [String]?
   weak var delegate: BreedListDetailViewModelDelegate?
@@ -22,12 +23,13 @@ final class BreedListDetailViewModel: BreedListDetailViewModelProtocol {
     self.fileManagerService = FileStorageManager()
     self.photoPath = ""
     self.favoritePathList = [""]
+    self.detailNavigationTitle = ""
   }
   
   //MARK: - Select Breead at Index
   func selectBreed(at index: Int, imagePath: [String]) {
     photoPath = imagePath[index]
-    
+    detailNavigationTitle = imagePath[index]
     do {
       let _ = try fileManagerService.save(fileNamed: photoPath ?? "")
     } catch { }

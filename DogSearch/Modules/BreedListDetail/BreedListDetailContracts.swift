@@ -14,14 +14,7 @@ protocol BreedListDetailViewModelProtocol: AnyObject {
   func load()
   func selectBreed(at index: Int, imagePath: [String])
   func goToFavorite()
-}
-
-//MARK: - BreedListDetailViewModelOutput
-enum BreedListDetailViewModelOutput: Equatable {
-  case setTitle(String)
-  case setLoading(Bool)
-  case showFavoriteImages(BreedImages)
-  case showError(Error)
+  var detailNavigationTitle: String { get set }
 }
 
 //MARK: - BreedListDetailVieRoute to Favorite
@@ -36,18 +29,3 @@ protocol BreedListDetailViewModelDelegate: AnyObject {
   func notifyTableView()
 }
 
-//MARK: - BreedListDetailViewModelOutput
-extension BreedListDetailViewModelOutput {
-  static func == (lhs: BreedListDetailViewModelOutput, rhs: BreedListDetailViewModelOutput) -> Bool {
-    switch (lhs, rhs) {
-    case (.setTitle(let a), .setTitle(let b)):
-      return a == b
-    case (.setLoading(let a), .setLoading(let b)):
-      return a == b
-    case (.showFavoriteImages(let a), .showFavoriteImages(let b)):
-      return a == b
-    default:
-      return false
-    }
-  }
-}

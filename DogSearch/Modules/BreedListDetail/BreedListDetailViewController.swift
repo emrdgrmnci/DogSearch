@@ -15,27 +15,24 @@ final class BreedListDetailViewController: UIViewController {
   private var breedImages: BreedImages = .init(message: [], status: "")
   var detailViewModel: BreedListDetailViewModelProtocol!
   var breedForIndexPath: [IndexPath: AnyCancellable] = [:]
-
+  
   //MARK: - View Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
     detailViewModel.delegate = self
     detailViewModel.load()
-    setupNavigationBar()
     configureTableView()
-    notifyTableView()
   }
-
+  
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     tableView.frame = view.bounds
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    view.backgroundColor = .systemBackground
+    setupNavigationBar()
   }
-
+  
   //MARK: - Configure TableView
   private func configureTableView() {
     view.addSubview(tableView)
@@ -44,7 +41,7 @@ final class BreedListDetailViewController: UIViewController {
     tableView.allowsSelection = false
     tableView.rowHeight = 100
   }
-
+  
   //MARK: -  Set TableView Delegates
   private func setTableViewDelegates() {
     tableView.delegate = self
@@ -54,6 +51,7 @@ final class BreedListDetailViewController: UIViewController {
   // MARK: - Setup NavigationBar
   private func setupNavigationBar() {
     let appearance = UINavigationBarAppearance()
+    title = detailViewModel.detailNavigationTitle
     appearance.configureWithOpaqueBackground()
     appearance.backgroundColor = .systemBackground
     appearance.titleTextAttributes = [.font: UIFont.boldSystemFont(ofSize: 20.0),
@@ -64,7 +62,7 @@ final class BreedListDetailViewController: UIViewController {
     navigationController?.navigationBar.sizeToFit()
     navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favorites", style: .plain, target: self, action: #selector(goToFavorites))
   }
-
+  
   //MARK: - Go to Favorites
   @objc func goToFavorites() {
     self.detailViewModel?.goToFavorite()
@@ -81,17 +79,19 @@ extension BreedListDetailViewController: UITableViewDataSource {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: BreedListDetailTableViewCell.reuseIdentifier, for: indexPath) as? BreedListDetailTableViewCell else {
       fatalError("BreedListDetailTableViewCell not found")
     }
-
-    cell.configure(with: self.breedImages, indexPath: indexPath)
+    
     cell.index = indexPath
-
-    breedForIndexPath[indexPath] = cell.tapButton.compactMap{$0} .sink { [weak self] selectedIndex in
+    DispatchQueue.main.async {
+      cell.configure(with: self.breedImages, indexPath: indexPath)
+    }
+    
+    self.breedForIndexPath[indexPath] = cell.tapButton.compactMap{$0} .sink { [weak self] selectedIndex in
       self?.detailViewModel.selectBreed(at: selectedIndex.row, imagePath: self?.breedImages.message ?? [""])
       print("user tap button on cell")
     }
     return cell
   }
-
+  
   func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     breedForIndexPath[indexPath] = nil
   }
@@ -118,7 +118,7 @@ extension BreedListDetailViewController: BreedListDetailViewModelDelegate {
       self.tableView.reloadData()
     }
   }
-
+  
   func showDetail(_ presentation: BreedListDetailPresentation) {
     self.breedImages.message = presentation.breedImages
   }

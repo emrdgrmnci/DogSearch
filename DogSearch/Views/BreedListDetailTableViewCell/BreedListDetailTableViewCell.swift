@@ -21,7 +21,7 @@ final class BreedListDetailTableViewCell: UITableViewCell {
   var index: IndexPath?
 
   // store publisher here
-  private var cancellable: AnyCancellable?
+  private var cancellable: [IndexPath: AnyCancellable] = [:]
   // Single Publisher per cell
   let tapButton = PassthroughSubject<IndexPath?, Never>()
 
@@ -41,16 +41,17 @@ final class BreedListDetailTableViewCell: UITableViewCell {
   @objc func favoriteAction() {
     favoriteButton.isSelected = !favoriteButton.isSelected
     favoriteButton.isSelected ? favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal) : favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
-
     tapButton.send(self.index)
   }
 
   //MARK: - Reusable cell
   override public func prepareForReuse() {
     super.prepareForReuse()
+    breedImageView.image = nil
+    index = nil
     breedImageView.image = UIImage(systemName: "photo")
     animator?.stopAnimation(true)
-    cancellable?.cancel()
+    cancellable[index ?? IndexPath()] = nil
   }
 
   //MARK: - Configure cell
@@ -58,6 +59,10 @@ final class BreedListDetailTableViewCell: UITableViewCell {
     self.index = indexPath
 
     let breedImagesFromAPI = image.message[indexPath.row]
+    self.cancellable[indexPath] = self.loadImage(for: breedImagesFromAPI).sink { [unowned self] image in
+      self.showImage(image: image)
+    }
+    
     do {
       self.fileManagerReadSavedURLs = try FileStorageManager.shared.readAllRemoteURLs()
       if self.fileManagerReadSavedURLs?.contains(breedImagesFromAPI) == true {
@@ -69,9 +74,6 @@ final class BreedListDetailTableViewCell: UITableViewCell {
       }
     } catch {
       print("Error when reading FM")
-    }
-    self.cancellable = self.loadImage(for: breedImagesFromAPI).sink { [unowned self] image in
-      self.showImage(image: image)
     }
   }
 
